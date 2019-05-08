@@ -1,0 +1,12 @@
+---
+  - name: Our Templating playbook
+    hosts: planet-express
+    gather_facts: yes
+
+    tasks:
+      - name: Our Template
+        template:
+          dest: ~/ship.conf
+          src: ~/mycode/ansible/template/ship.conf.j2
+
+
