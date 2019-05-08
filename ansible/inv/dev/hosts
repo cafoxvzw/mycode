@@ -1,0 +1,9 @@
+[planet-express]
+;The semi colon is now the comment character
+fry ansible_host=10.10.2.4 ansible_ssh_user=fry
+bender ansible_host=10.10.2.3 ansible_ssh_user=bender
+zoidberg ansible_host=10.10.2.5 ansible_ssh_user=zoidberg
+
+[planet-express:vars]
+engines=darkmatter
+

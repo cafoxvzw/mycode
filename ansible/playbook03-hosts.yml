@@ -1,0 +1,42 @@
+---
+- name: Playbook that targets hosts
+  hosts: planet-express
+  gather_facts: yes
+  vars:
+          engines: chemical
+  tasks:
+          - name: Install figlet
+            apt: 
+              name: figlet
+              state: present #use absent to backout
+            become: yes
+            when: ansible_os_family == "Debian"
+
+          - name: Install figlet
+            yum:
+              name: figlet
+              state: present
+            become: yes
+            when: ansible_os_family == "RedHat"
+
+            # - name: issue a command
+            #command: ls /home
+            #become: yes
+            #register: homevarz
+
+         # - name: display homevarz
+            #debug:
+            #  var: homevarz
+
+            #- name: display the value of homevarz.stdout
+            #debug:
+            # var: homevarz.stdout
+
+          - name: Place a readme in target system
+            copy:
+              dest: "/home/{{ inventory_hostname }}/readme.txt"
+              content: "Type figlet to enter the banner creation tool"
+
+          - name: display a group variable
+            debug:
+              var: engines
