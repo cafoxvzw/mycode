@@ -1,0 +1,68 @@
+---
+- name: A few basic filters
+  hosts: localhost
+  gather_facts: no
+
+  vars:
+    jarlist: [1,1,1,1,5]
+    repeatlist: [1,2,2,2,4,4,4,4,9,9,9,9]
+    repeat2list: [1,2,3,4,5,6,7]
+    complexlist: [6,7,8,9,[10,22,55],87]
+    test_list: 
+      - '192.168.2.1'
+      - '10.0.0.1'
+      - 'host.example.org'
+      - '192.168.70.0/24'
+      - 'fe80::100/10'
+      - True
+      - 'Witcher3 The Wild Hunt'
+      - 'Earl Grey tea, hot'
+    mytest_string: 'ncc1701 uss enterprise'
+    myaddresses: ['192.168.2.101', '10.0.3.50', '171.172.32.1']
+
+  tasks:
+  - name: the min filter
+    debug:
+      msg: "Show me the largest number in the list: '{{ jarlist|min }}'"
+
+  - name: the flatten filter
+    debug:
+      msg: "flatten a list: '{{ complexlist|flatten }}'"
+
+  - name: grab the unique values
+    debug:
+      msg: "the unique values are: '{{ repeatlist|unique }}'"
+
+  - name: show the diff's of two lists
+    debug:
+      msg: "this diff's are: '{{ repeatlist|difference(repeat2list) }}'"
+
+  - name: snooze our Ansible script
+    pause: 
+      seconds: "{{ sleeptime|default(10) }}"    
+
+  - name: I just want IP address
+    debug:
+      msg: "{{ test_list | ipaddr }}"
+
+  - name: Spawn a mac
+    debug: 
+      msg: "{{ '52:54:00' | random_mac }}"
+
+  - name: test if a variable ends in prise
+    debug:
+      msg: "ahh but is it A B C or D???"
+    when: mytest_string.endswith('prise')
+
+  - name: show capitalize with jinja
+    debug:
+      var: mytest_string | capitalize
+
+  - name: show capitalize with python
+    debug:
+      var: mytest_string.capitalize()
+
+  - name: show addresses that match our scope
+    debug: #The split below is pulling only the .50 out of the output below
+      msg: "{{ (myaddresses|ipaddr('10.0.0.0/8'))[0].split('.')[3] }}"
+
